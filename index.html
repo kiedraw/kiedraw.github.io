@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flipbook Javascript Plugin</title>
+    <link rel="stylesheet" href="./bulma.min.css">
+    <link rel="stylesheet" href="./flipbook.min.css">
+  </head>
+
+  <body>
+    <section class="section">
+      <div class="container">
+        <div class="content">
+          <div class="level">
+            <div class="is-relative is-flex" style="margin: 0 auto 48px; width: 100%; max-width: 800px; height: 283px;">
+              <div class="c-flipbook at-front-cover is-ready" id="FlipBook2" style="width: 100%; height: 283px;">
+                <div class="c-flipbook__page first-page is-active is-calling">
+                  <img class="image" src="./1.jpg">
+                </div>
+                <div class="c-flipbook__page">
+                  <img class="image" src="./2.jpg">
+                </div>
+                <div class="c-flipbook__page">
+                  <img class="image" src="./3.jpg">
+                </div>
+                <div class="c-flipbook__page">
+                  <img class="image" src="./4.jpg">
+                </div>
+                <div class="c-flipbook__page">
+                  <img class="image" src="./5.jpg">
+                </div>
+                <div class="c-flipbook__page last-page">
+                  <img class="image" src="./6.jpg">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="./flipbook.umd.min.js"></script>
+    <script>
+      window.book = new FlipBook('FlipBook2', {
+        canClose: true,
+        initialCall: true,
+      });
+    </script>
+  </body>
+</html>
