@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 set -ex 
-for ((i=0; ; i++)); do
+for ((i=1; ; i++)); do
     left="$((2*i)).jpg"
     right="$((2*i+1)).jpg"
 

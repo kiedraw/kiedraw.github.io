@@ -10,44 +10,17 @@
   </head>
 
   <body>
-    <div class="is-relative is-flex" id="parent">
-      <div class="c-flipbook at-front-cover is-ready" id="FlipBook">
-<!--         <div class="c-flipbook__page first-page">
-          <img class="image" src="./1.jpg">
-        </div>
-        <div class="c-flipbook__page">
-          <img class="image" src="./2.jpg">
-        </div>
-        <div class="c-flipbook__page">
-          <img class="image" src="./3.jpg">
-        </div>
-        <div class="c-flipbook__page">
-          <img class="image" src="./4.jpg">
-        </div>
-        <div class="c-flipbook__page">
-          <img class="image" src="./5.jpg">
-        </div>
-        <div class="c-flipbook__page">
-          <img class="image" src="./6.jpg">
-        </div>
-        <div class="c-flipbook__page">
-          <img class="image" src="./7.jpg">
-        </div>
-        <div class="c-flipbook__page">
-          <img class="image" src="./8.jpg">
-        </div>
-        <div class="c-flipbook__page">
-          <img class="image" src="./9.jpg">
-        </div>
-        <div class="c-flipbook__page last-page">
-          <img class="image" src="./10.jpg">
-        </div> -->
-      </div>
+    <div class="is-relative is-flex image-wrapper" id="parent">
+      <img src="book1.jpg" class="book-image" id="workaround">
+      <div class="c-flipbook at-front-cover is-ready" id="FlipBook"></div>
+      <div class="book-gutter" id="gutter"></div>
     </div>
     <script src="./flipbook.umd.min.js"></script>
     <script>
 
       const target = document.getElementById("FlipBook");
+      const gutter = document.getElementById("gutter");
+      const workaround = document.getElementById("workaround");
 
       const firstPage = document.createElement("div");
       firstPage.className = "c-flipbook__page first-page";
@@ -75,9 +48,28 @@
       lastPage.appendChild(lastImg);
       target.appendChild(lastPage);
 
+      gutter.style.visibility = 'hidden';
+      workaround.style.visibility = 'hidden';
+
       window.book = new FlipBook('FlipBook', {
         canClose: true,
         initialCall: true,
+        onPageTurn: function(a, b) {
+          const first = b.children[0];
+          const last = b.children[b.children.length-1];
+          if(first.classList.contains("is-active") ||
+             last.classList.contains("is-active"))
+          {
+            gutter.style.visibility = 'hidden';
+            workaround.style.visibility = 'hidden';
+          }
+          else {
+            setTimeout(function() {
+              gutter.style.visibility = 'visible';
+              workaround.style.visibility = 'visible';
+            }, 500);
+          }
+        }
       });
     </script>
     <style>
@@ -89,6 +81,40 @@
         margin: 48px 48px 0px 48px;
         max-width: 4000px;
       }
+
+      .image-wrapper {
+        position: relative;
+        display: inline-block;
+        line-height: 0;
+      }
+
+      .book-image {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .book-gutter {
+        position: absolute;
+
+        /* 201px wide in the original 4000px image */
+        width: 1.025%;
+
+        /* Full image height */
+        top: 0;
+        bottom: 0;
+
+        /* Exactly the middle */
+        left: 50%;
+        transform: translateX(-50%);
+
+        background: rgba(0, 0, 0, 0.25);
+        filter: blur(15px);
+        mix-blend-mode: multiply;
+
+        pointer-events: none;
+      }
+
     </style>
   </body>
 </html>
