@@ -12,7 +12,7 @@
   <body>
     <div class="is-relative is-flex" id="parent">
       <div class="c-flipbook at-front-cover is-ready" id="FlipBook">
-        <div class="c-flipbook__page first-page">
+<!--         <div class="c-flipbook__page first-page">
           <img class="image" src="./1.jpg">
         </div>
         <div class="c-flipbook__page">
@@ -41,23 +41,39 @@
         </div>
         <div class="c-flipbook__page last-page">
           <img class="image" src="./10.jpg">
-        </div>
+        </div> -->
       </div>
     </div>
     <script src="./flipbook.umd.min.js"></script>
     <script>
 
-      // const target = document.getElementById("FlipBook");
+      const target = document.getElementById("FlipBook");
 
-      // const wrapper = document.createElement("div");
-      // wrapper.className = "c-flipbook__page last-page";
+      const firstPage = document.createElement("div");
+      firstPage.className = "c-flipbook__page first-page";
+      const firstImg = document.createElement("img");
+      firstImg.src = "./1.jpg";
+      firstImg.className = "image";
+      firstPage.appendChild(firstImg);
+      target.appendChild(firstPage);
 
-      // const img = document.createElement("img");
-      // img.src = "./6.jpg";
-      // img.className = "image";
+      for(var i = 2; i < 70; i++) {
+        const page = document.createElement("div");
+        page.className = "c-flipbook__page";
+        const img = document.createElement("img");
+        img.src = "./" + i + ".jpg";
+        img.className = "image";
+        page.appendChild(img);
+        target.appendChild(page);
+      }
 
-      // wrapper.appendChild(img);
-      // target.appendChild(wrapper);
+      const lastPage = document.createElement("div");
+      lastPage.className = "c-flipbook__page last-page";
+      const lastImg = document.createElement("img");
+      lastImg.src = "./70.jpg";
+      lastImg.className = "image";
+      lastPage.appendChild(lastImg);
+      target.appendChild(lastPage);
 
       window.book = new FlipBook('FlipBook', {
         canClose: true,
