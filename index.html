@@ -30,7 +30,7 @@
       firstPage.appendChild(firstImg);
       target.appendChild(firstPage);
 
-      for(var i = 2; i < 70; i++) {
+      for(var i = 2; i < 54; i++) {
         const page = document.createElement("div");
         page.className = "c-flipbook__page";
         const img = document.createElement("img");
@@ -43,7 +43,7 @@
       const lastPage = document.createElement("div");
       lastPage.className = "c-flipbook__page last-page";
       const lastImg = document.createElement("img");
-      lastImg.src = "./70.jpg";
+      lastImg.src = "./54.jpg";
       lastImg.className = "image";
       lastPage.appendChild(lastImg);
       target.appendChild(lastPage);
@@ -57,16 +57,29 @@
         onPageTurn: function(a, b) {
           const first = b.children[0];
           const last = b.children[b.children.length-1];
+          console.log('last', last);
           if(first.classList.contains("is-active") ||
-             last.classList.contains("is-active"))
+             last.classList.contains("is-active") ||
+             last.classList.contains("is-animating") ||
+             first.classList.contains("is-animating"))
           {
             gutter.style.visibility = 'hidden';
             workaround.style.visibility = 'hidden';
           }
           else {
             setTimeout(function() {
-              gutter.style.visibility = 'visible';
-              workaround.style.visibility = 'visible';
+              if(first.classList.contains("is-active") ||
+               last.classList.contains("is-active") ||
+               last.classList.contains("is-animating") ||
+               first.classList.contains("is-animating"))
+              {
+
+              }
+              else
+              {
+                gutter.style.visibility = 'visible';
+                workaround.style.visibility = 'visible';
+              }
             }, 500);
           }
         }
