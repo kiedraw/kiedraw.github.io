@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Wiktoria Kiedrowicz - Portfolio</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui" />
+    <meta name="robots" content="noimageindex" />
+  </head>
+
+  <body>
+    <div class="book-wrapper">
+
+      <div id="book" class="book">
+      </div>
+      <div class="book-blur"></div>
+    </div>
+  </body>
+  <style>
+    html, body {
+      background-color: darkgray;
+      width: 100%;
+      margin: 0;
+    }
+
+    .book-wrapper {
+      position: relative;
+      width: 95vw;
+      height: 66.75vh;
+      margin: 50px auto 0 0;
+    }
+
+    .book {
+      width: 100%;
+      height: 100%;
+      perspective: 1500px;
+    }
+
+    .page {
+      width: 50%;
+      position: absolute;
+      left: 50%;
+      transform-style: preserve-3d;
+    }
+
+    .front {
+      width: 100%;
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      transform: rotateY(0deg);
+    }
+
+    .back {
+      width: 100%;
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      transform: rotateY(180deg);
+    }
+
+.book-blur {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background: linear-gradient(
+    to right,
+    transparent 48%,
+    rgba(0, 0, 0, 0.08) 49%,
+    rgba(0, 0, 0, 0.22) 50%,
+    rgba(0, 0, 0, 0.08) 51%,
+    transparent 52%
+  );
+
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 48%,
+    black 50%,
+    transparent 52%,
+    transparent 100%
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 48%,
+    black 50%,
+    transparent 52%,
+    transparent 100%
+  );
+}
+  </style>
+
+  <script>
+    const book = document.querySelector("#book");
+
+    function onPageMouseEnter(e) {
+      const steps =
+      [
+        { transform: "rotateX(0deg)" },
+        { transform: "rotateX(-10deg)" }
+      ];
+
+      e.target.animate(steps, config);
+    }
+
+    function onPageMouseLeave(e) {
+      const steps =
+      [
+        { transform: "rotateX(-10deg)" },
+        { transform: "rotateX(0deg)" }
+      ];
+
+      e.target.animate(steps, config);
+    }
+
+    function onPageMouseEnterLeft(e) {
+      const steps =
+      [
+        { transform: "translateX(-100%) translateZ(0px) rotateY(180deg) rotateX(0deg)" },
+        { transform: "translateX(-100%) translateZ(0px) rotateY(180deg) rotateX(-10deg)" }
+      ];
+
+      e.target.animate(steps, config);
+    }
+
+    function onPageMouseLeaveLeft(e) {
+      const steps =
+      [
+        { transform: "translateX(-100%) translateZ(0px) rotateY(180deg) rotateX(-10deg)" },
+        { transform: "translateX(-100%) translateZ(0px) rotateY(180deg) rotateX(0deg)" }
+      ];
+
+      e.target.animate(steps, config);
+    }
+
+    const pages = [];
+    for(var i = 0; i < 23; i++) {
+      const page = document.createElement("div");
+      pages[i] = page;
+      page.className = "page";
+      page.style.zIndex = (-i).toString();
+
+      const front = document.createElement("img");
+      front.className = "front";
+      front.src = (i*2 + 1) + ".jpg";
+
+      const back = document.createElement("img");
+      back.className = "back";
+      back.src = (i*2 + 2) + ".jpg";
+
+      page.appendChild(front);
+      page.appendChild(back);
+      book.appendChild(page);
+    }
+
+    var counter = 0;
+
+    const config =
+    {
+      duration: 250,
+      easing: "ease-in-out",
+      fill: "forwards"
+    };
+
+    function flipRight() {
+      if(counter > 0) {
+        counter--;
+        const page = pages[counter];
+        const halfWidth = page.offsetWidth / 2;
+
+        const begin =
+        [
+          { transform: "translateX(-100%) translateZ(0px) rotateY(180deg)" },
+          { transform: `translateX(-50%) translateZ(-${halfWidth}px) rotateY(90deg)` },
+        ];
+
+        const end =
+        [
+          { transform: `translateX(-50%) translateZ(-${halfWidth}px) rotateY(90deg)` },
+          { transform: "translateX(0) translateZ(0) rotateY(0deg)" },
+        ];
+
+        page.removeEventListener("mouseenter", onPageMouseEnterLeft);
+        page.removeEventListener("mouseleave", onPageMouseLeaveLeft);
+        page.removeEventListener("click", flipRight);
+
+        page.animate(begin, config)
+          .finished.then(() => {
+            page.style.zIndex = -parseInt(getComputedStyle(page).zIndex);
+            page.animate(end, config)
+              .finished.then(() => {
+                page.addEventListener("mouseenter", onPageMouseEnter);
+                page.addEventListener("mouseleave", onPageMouseLeave);
+                page.addEventListener("click", flipLeft);
+                if(counter > 0)
+                {
+                  pages[counter-1].addEventListener("mouseenter", onPageMouseEnterLeft);
+                  pages[counter-1].addEventListener("mouseleave", onPageMouseLeaveLeft);
+                  pages[counter-1].addEventListener("click", flipRight);
+                }
+              })
+          });
+      }
+    }
+
+    function flipLeft() {
+      if(counter < 48) {
+
+        const page = pages[counter];
+        counter++;
+
+        const halfWidth = page.offsetWidth / 2;
+
+        const begin =
+        [
+          { transform: "translateX(0) translateZ(0) rotateY(0deg)" },
+          { transform: `translateX(-50%) translateZ(-${halfWidth}px) rotateY(90deg)` },
+        ];
+
+        const end =
+        [
+          { transform: `translateX(-50%) translateZ(-${halfWidth}px) rotateY(90deg)` },
+          { transform: "translateX(-100%) translateZ(0px) rotateY(180deg)" },
+        ];
+
+        page.removeEventListener("click", flipLeft);
+        page.removeEventListener("mouseenter", onPageMouseEnter);
+        page.removeEventListener("mouseleave", onPageMouseLeave);
+        page.animate(begin, config)
+          .finished.then(() => {
+            page.style.zIndex = -parseInt(getComputedStyle(page).zIndex);
+            page.animate(end, config)
+              .finished.then(() => {
+                pages[counter-1].addEventListener("mouseenter", onPageMouseEnterLeft);
+                pages[counter-1].addEventListener("mouseleave", onPageMouseLeaveLeft);
+                pages[counter-1].addEventListener("click", flipRight);
+
+                pages[counter].addEventListener("mouseenter", onPageMouseEnter);
+                pages[counter].addEventListener("mouseleave", onPageMouseLeave);
+                pages[counter].addEventListener("click", flipLeft);
+              });
+          });
+      }
+    }
+
+    pages[0].addEventListener("mouseenter", onPageMouseEnter);
+    pages[0].addEventListener("mouseleave", onPageMouseLeave);
+    pages[0].addEventListener("click", flipLeft);
+
+    document.addEventListener('keydown', (event) => {
+      if(event.keyCode == 39) {
+        flipLeft();
+      }
+      else if(event.keyCode == 37) {
+        flipRight();
+      }
+    });
+  </script>
+</html>
